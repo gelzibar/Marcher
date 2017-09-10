@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -560,6 +560,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -860,6 +874,12 @@ Prefab:
       propertyPath: obstacleOnly
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114667950633052554, guid: a92605f47effe4ddcb4737a0c3540b22,
+        type: 2}
+      propertyPath: pObstacle
+      value: 
+      objectReference: {fileID: 1154563568517374, guid: bfcad25c7d2ed4824bb9ccf4dd021aa1,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a92605f47effe4ddcb4737a0c3540b22, type: 2}
   m_IsPrefabParent: 0
@@ -911,6 +931,12 @@ Prefab:
       propertyPath: obstacleOnly
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114667950633052554, guid: a92605f47effe4ddcb4737a0c3540b22,
+        type: 2}
+      propertyPath: pObstacle
+      value: 
+      objectReference: {fileID: 1154563568517374, guid: bfcad25c7d2ed4824bb9ccf4dd021aa1,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a92605f47effe4ddcb4737a0c3540b22, type: 2}
   m_IsPrefabParent: 0
