@@ -2,44 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaneSource : MonoBehaviour {
+public class LaneSource : MonoBehaviour
+{
 
-    public GameObject pTile, pObstacle;
+    public GameObject pTile, pObstacle, pHazard;
     public bool obstacleOnly;
     private GameObject curTile;
     private int obstaclePercent;
+    private int hazardOffset;
 
-    void Start() {
+    void Start()
+    {
         OnStart();
     }
 
-    void OnStart() {
-        if (obstacleOnly) {
+    void OnStart()
+    {
+        if (obstacleOnly)
+        {
             obstaclePercent = 0;
             GenerateObstacle();
         }
-        else {
+        else
+        {
             obstaclePercent = 18;
         }
+        hazardOffset = 15;
 
         PopulatePlaySpace();
         GenerateBG();
 
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         OnFixedUpdate();
     }
 
     void OnFixedUpdate() { }
 
-    void Update() {
+    void Update()
+    {
         OnUpdate();
     }
-    void OnUpdate() {
-        if (curTile != null) {
-            if (Vector3.Distance(transform.position, curTile.GetComponent<Rigidbody2D>().position) > 1.0f) {
-                if (Random.Range(0, 20) >= obstaclePercent) {
+    void OnUpdate()
+    {
+        if (curTile != null)
+        {
+            if (Vector3.Distance(transform.position, curTile.GetComponent<Rigidbody2D>().position) > 1.0f)
+            {
+                if (Random.Range(0, 20) >= obstaclePercent)
+                {
                     GenerateObstacle();
                 }
                 GenerateBG();
@@ -49,61 +62,87 @@ public class LaneSource : MonoBehaviour {
 
     }
 
-    void PopulatePlaySpace() {
-        int numRows = 11;
+    void PopulatePlaySpace()
+    {
+        int numRows = 12;
 
-        for (int i = 0; i < numRows; i++) {
+        for (int i = 0; i < numRows; i++)
+        {
             Vector3 location = new Vector3(transform.position.x, transform.position.y - (i + 1), transform.position.z);
             GenerateBG_At(location);
-            if (obstacleOnly) {
+            if (obstacleOnly)
+            {
                 GenerateObstacle_At(location);
+            }
+            else
+            {
+                if (i == numRows - 1)
+                {
+                    GenerateHazard(location);
+                }
             }
         }
 
     }
 
-    void GenerateTile(GameObject template, Transform parent) {
+    void GenerateTile(GameObject template, Transform parent)
+    {
         Vector3 location = new Vector3();
-        if (curTile != null) {
+        if (curTile != null)
+        {
             location = new Vector3(transform.position.x, curTile.transform.position.y + 1.0f, transform.position.z);
         }
-        else {
+        else
+        {
             location = transform.position;
         }
 
         curTile = Instantiate(template, location, transform.rotation, parent);
     }
 
-    void GenerateObstacle() {
+    void GenerateObstacle()
+    {
         Vector3 location = new Vector3();
-        if (curTile != null) {
+        if (curTile != null)
+        {
             location = new Vector3(transform.position.x, curTile.transform.position.y + 1.0f, transform.position.z);
         }
-        else {
+        else
+        {
             location = transform.position;
         }
 
         Instantiate(pObstacle, location, transform.rotation, GameObject.Find("Obstacles").transform);
     }
 
-    void GenerateBG() {
+    void GenerateBG()
+    {
         Vector3 location = new Vector3();
-        if (curTile != null) {
+        if (curTile != null)
+        {
             location = new Vector3(transform.position.x, curTile.transform.position.y + 1.0f, transform.position.z);
         }
-        else {
+        else
+        {
             location = transform.position;
         }
 
         curTile = Instantiate(pTile, location, transform.rotation, GameObject.Find("Background").transform);
     }
 
-    void GenerateBG_At(Vector3 location) {
+    void GenerateBG_At(Vector3 location)
+    {
 
         Instantiate(pTile, location, transform.rotation, GameObject.Find("Background").transform);
     }
 
-    void GenerateObstacle_At(Vector3 location) {
+    void GenerateObstacle_At(Vector3 location)
+    {
         Instantiate(pObstacle, location, transform.rotation, GameObject.Find("Obstacles").transform);
+    }
+
+    void GenerateHazard(Vector3 location)
+    {
+        Instantiate(pHazard, location, transform.rotation, GameObject.Find("Hazards").transform);
     }
 }

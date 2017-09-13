@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Outbounds
   - Background
+  - Hazard
   layers:
   - Default
   - TransparentFX

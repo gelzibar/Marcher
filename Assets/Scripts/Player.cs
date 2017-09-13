@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     Rigidbody2D myrb;
+    Animator myAnim;
     bool leftInput, rightInput;
     int maxMoveCycle, curMoveCycle;
     bool isMoving, attemptMove;
+    bool isAlive;
 
     float move, moveFactor, moveFactorY;
 
-    void Start() {
+    void Start()
+    {
         OnStart();
     }
 
-    void OnStart() {
+    void OnStart()
+    {
         myrb = GetComponent<Rigidbody2D>();
+        myAnim = GetComponent<Animator>();
         leftInput = false;
         rightInput = false;
 
@@ -24,81 +30,129 @@ public class Player : MonoBehaviour {
         curMoveCycle = 0;
         isMoving = false;
         attemptMove = false;
+        isAlive = true;
 
         move = 0.0f;
         moveFactor = 0.1f;
         moveFactorY = 0.01f;
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         OnFixedUpdate();
     }
 
-    void OnFixedUpdate() {
+    void OnFixedUpdate()
+    {
         float yGoal = myrb.position.y;
         Vector2 vel = new Vector2(myrb.position.x, yGoal);
 
-        if(myrb.position.y < 0.0f) {
+        if (myrb.position.y < 0.0f)
+        {
             float target = 0.0f;
             float resolution = myrb.position.y + moveFactorY;
-            Debug.Log(resolution);
             yGoal = resolution;
             vel = new Vector2(myrb.position.x, yGoal);
+            if (isAlive)
+            {
+                myAnim.SetBool("isRunning", true);
+                myAnim.SetBool("isWalking", false);
+            }
+        }
+        else
+        {
+            if (isAlive)
+            {
+                myAnim.SetBool("isWalking", true);
+                myAnim.SetBool("isRunning", false);
+            }
         }
 
-        if (attemptMove) {
-            vel = new Vector2(myrb.position.x + move, yGoal);
-            curMoveCycle++;
-        }else if (!attemptMove) {
-            if(myrb.position.x % 1 != 0) {
-                float target = Mathf.Round(myrb.position.x);
-                float resolution = Mathf.Lerp(myrb.position.x, target, moveFactor);
-                //resolution = Mathf.Clamp(resolution, 0.0f, 0.1f);
-                //Debug.Log(target + " : " + resolution);
-                vel = new Vector2(resolution,yGoal);
-                 
+        if (!isAlive)
+        {
+            myAnim.SetBool("isWalking", false);
+            myAnim.SetBool("isRunning", false);
+            myAnim.SetBool("isDying", true);
+        }
+
+        if (isAlive)
+        {
+            if (attemptMove)
+            {
+                vel = new Vector2(myrb.position.x + move, yGoal);
+                curMoveCycle++;
             }
+            else if (!attemptMove)
+            {
+                if (myrb.position.x % 1 != 0)
+                {
+                    float target = Mathf.Round(myrb.position.x);
+                    float resolution = Mathf.Lerp(myrb.position.x, target, moveFactor);
+                    //resolution = Mathf.Clamp(resolution, 0.0f, 0.1f);
+                    //Debug.Log(target + " : " + resolution);
+                    vel = new Vector2(resolution, yGoal);
+
+                }
                 // we want to identify the closest INT- So, if you're 3.6, then 4.
                 // and then establish a routine to move towards that INT.
+            }
         }
         myrb.MovePosition(vel);
 
         myrb.velocity = Vector2.zero;
     }
 
-    void Update() {
+    void Update()
+    {
         OnUpdate();
     }
-    void OnUpdate() {
+    void OnUpdate()
+    {
 
         leftInput = false;
         rightInput = false;
 
-        if (!isMoving) {
-            if (Input.GetKeyDown(KeyCode.A)) {
-                leftInput = true;
-                isMoving = true;
-                move = moveFactor * -1;
+        if (isAlive)
+        {
+            if (!isMoving)
+            {
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    leftInput = true;
+                    isMoving = true;
+                    move = moveFactor * -1;
+                }
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    rightInput = true;
+                    isMoving = true;
+                    move = moveFactor;
+                }
             }
-            if (Input.GetKeyDown(KeyCode.D)) {
-                rightInput = true;
-                isMoving = true;
-                move = moveFactor;
-            }
-        }
 
-        if (isMoving) {
-            if (curMoveCycle < maxMoveCycle) {
-                attemptMove = true;
-            }
-            else if (curMoveCycle >= maxMoveCycle) {
-                attemptMove = false;
-                curMoveCycle = 0;
-                isMoving = false;
+            if (isMoving)
+            {
+                if (curMoveCycle < maxMoveCycle)
+                {
+                    attemptMove = true;
+                }
+                else if (curMoveCycle >= maxMoveCycle)
+                {
+                    attemptMove = false;
+                    curMoveCycle = 0;
+                    isMoving = false;
+                }
             }
         }
     }
 
-    // Need to consider working toward target AND input.
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Hazard")
+        {
+            isAlive = false;
+            // Game Fail screen pops up
+        }
+    }
 
 }
