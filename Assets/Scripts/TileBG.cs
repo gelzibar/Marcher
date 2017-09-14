@@ -7,6 +7,7 @@ public class TileBG : MonoBehaviour {
 	TileManager myTileManager;
 	SpriteRenderer mySR;
 	Rigidbody2D myRB;
+	public float meters;
 
 	void Start () {
 		OnStart();
@@ -41,5 +42,9 @@ public class TileBG : MonoBehaviour {
 		if(col.tag == "Outbounds") {
 			Destroy(gameObject);
 		}
+	}
+
+	public void SetDistance(float dist) {
+		meters = dist;
 	}
 }

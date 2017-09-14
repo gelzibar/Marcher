@@ -10,6 +10,7 @@ public class LaneSource : MonoBehaviour
     private GameObject curTile;
     private int obstaclePercent;
     private int hazardOffset;
+    private float curDistance;
 
     void Start()
     {
@@ -18,6 +19,7 @@ public class LaneSource : MonoBehaviour
 
     void OnStart()
     {
+        curDistance = 0;
         if (obstacleOnly)
         {
             obstaclePercent = 0;
@@ -64,9 +66,9 @@ public class LaneSource : MonoBehaviour
 
     void PopulatePlaySpace()
     {
-        int numRows = 12;
+        int numRows = 11;
 
-        for (int i = 0; i < numRows; i++)
+        for (int i = numRows; i >= 0; i--)
         {
             Vector3 location = new Vector3(transform.position.x, transform.position.y - (i + 1), transform.position.z);
             GenerateBG_At(location);
@@ -76,7 +78,7 @@ public class LaneSource : MonoBehaviour
             }
             else
             {
-                if (i == numRows - 1)
+                if (i == numRows)
                 {
                     GenerateHazard(location);
                 }
@@ -117,6 +119,7 @@ public class LaneSource : MonoBehaviour
 
     void GenerateBG()
     {
+        Debug.Log("BG Executing");
         Vector3 location = new Vector3();
         if (curTile != null)
         {
@@ -128,12 +131,19 @@ public class LaneSource : MonoBehaviour
         }
 
         curTile = Instantiate(pTile, location, transform.rotation, GameObject.Find("Background").transform);
+        curDistance++;
+        curTile.GetComponent<TileBG>().SetDistance(curDistance);
     }
 
     void GenerateBG_At(Vector3 location)
     {
 
-        Instantiate(pTile, location, transform.rotation, GameObject.Find("Background").transform);
+        curTile = Instantiate(pTile, location, transform.rotation, GameObject.Find("Background").transform);
+        curDistance++;
+        curTile.GetComponent<TileBG>().SetDistance(curDistance);
+
+        // Since 'curTile' won't properly be represented by this bulk generation, clear it.
+        curTile = null;
     }
 
     void GenerateObstacle_At(Vector3 location)

@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     int maxMoveCycle, curMoveCycle;
     bool isMoving, attemptMove;
     bool isAlive;
+    float curDistance;
+
 
     float move, moveFactor, moveFactorY;
 
@@ -31,10 +33,11 @@ public class Player : MonoBehaviour
         isMoving = false;
         attemptMove = false;
         isAlive = true;
-
         move = 0.0f;
         moveFactor = 0.1f;
         moveFactorY = 0.01f;
+
+        curDistance = 0.0f;
     }
 
     void FixedUpdate()
@@ -51,10 +54,10 @@ public class Player : MonoBehaviour
         {
             float target = 0.0f;
             float resolution = myrb.position.y + moveFactorY;
-            yGoal = resolution;
-            vel = new Vector2(myrb.position.x, yGoal);
             if (isAlive)
             {
+                yGoal = resolution;
+                vel = new Vector2(myrb.position.x, yGoal);
                 myAnim.SetBool("isRunning", true);
                 myAnim.SetBool("isWalking", false);
             }
@@ -153,6 +156,27 @@ public class Player : MonoBehaviour
             isAlive = false;
             // Game Fail screen pops up
         }
+
+    }
+
+    void OnTriggerStay2D(Collider2D collider)
+    {
+        if (collider.tag == "Background")
+        {
+            if (Vector2.Distance(collider.GetComponent<Rigidbody2D>().position, myrb.position) < 0.5f)
+            {
+                curDistance = collider.gameObject.GetComponent<TileBG>().meters;
+            }
+        }
+    }
+
+    public float GetDistance()
+    {
+        return curDistance;
+    }
+
+    public bool GetAlive() {
+        return isAlive;
     }
 
 }
