@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: cf766e43265c34876968bd948ebcbb75
+timeCreated: 1506135868
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Archivo Black
+  fontNames:
+  - Archivo Black
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b48bc0db38cb24f3b8ebb65d43fdad88, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 
     Rigidbody2D myrb;
     Animator myAnim;
+    LevelController mylc;
     bool leftInput, rightInput;
     int maxMoveCycle, curMoveCycle;
     bool isMoving, attemptMove;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
     {
         myrb = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
+        mylc = GameObject.Find("Level Controller").GetComponent<LevelController>();
         leftInput = false;
         rightInput = false;
 
@@ -47,61 +49,48 @@ public class Player : MonoBehaviour
 
     void OnFixedUpdate()
     {
-        float yGoal = myrb.position.y;
-        Vector2 vel = new Vector2(myrb.position.x, yGoal);
+        if (!mylc.GetPaused())
+        {
 
-        if (myrb.position.y < 0.0f)
-        {
-            float target = 0.0f;
-            float resolution = myrb.position.y + moveFactorY;
-            if (isAlive)
-            {
-                yGoal = resolution;
-                vel = new Vector2(myrb.position.x, yGoal);
-                myAnim.SetBool("isRunning", true);
-                myAnim.SetBool("isWalking", false);
-            }
-        }
-        else
-        {
-            if (isAlive)
-            {
-                myAnim.SetBool("isWalking", true);
-                myAnim.SetBool("isRunning", false);
-            }
-        }
+            float yGoal = myrb.position.y;
+            Vector2 vel = new Vector2(myrb.position.x, yGoal);
 
-        if (!isAlive)
-        {
-            myAnim.SetBool("isWalking", false);
-            myAnim.SetBool("isRunning", false);
-            myAnim.SetBool("isDying", true);
-        }
-
-        if (isAlive)
-        {
-            if (attemptMove)
+            if (myrb.position.y < 0.0f)
             {
-                vel = new Vector2(myrb.position.x + move, yGoal);
-                curMoveCycle++;
-            }
-            else if (!attemptMove)
-            {
-                if (myrb.position.x % 1 != 0)
+                float target = 0.0f;
+                float resolution = myrb.position.y + moveFactorY;
+                if (isAlive)
                 {
-                    float target = Mathf.Round(myrb.position.x);
-                    float resolution = Mathf.Lerp(myrb.position.x, target, moveFactor);
-                    //resolution = Mathf.Clamp(resolution, 0.0f, 0.1f);
-                    //Debug.Log(target + " : " + resolution);
-                    vel = new Vector2(resolution, yGoal);
-
+                    yGoal = resolution;
+                    vel = new Vector2(myrb.position.x, yGoal);
                 }
-                // we want to identify the closest INT- So, if you're 3.6, then 4.
-                // and then establish a routine to move towards that INT.
             }
-        }
-        myrb.MovePosition(vel);
 
+            if (isAlive)
+            {
+                if (attemptMove)
+                {
+                    vel = new Vector2(myrb.position.x + move, yGoal);
+                    curMoveCycle++;
+                }
+                else if (!attemptMove)
+                {
+                    if (myrb.position.x % 1 != 0)
+                    {
+                        float target = Mathf.Round(myrb.position.x);
+                        float resolution = Mathf.Lerp(myrb.position.x, target, moveFactor);
+                        //resolution = Mathf.Clamp(resolution, 0.0f, 0.1f);
+                        //Debug.Log(target + " : " + resolution);
+                        vel = new Vector2(resolution, yGoal);
+
+                    }
+                    // we want to identify the closest INT- So, if you're 3.6, then 4.
+                    // and then establish a routine to move towards that INT.
+                }
+            }
+            myrb.MovePosition(vel);
+
+        }
         myrb.velocity = Vector2.zero;
     }
 
@@ -112,8 +101,49 @@ public class Player : MonoBehaviour
     void OnUpdate()
     {
 
+        int state = 0;
+
         leftInput = false;
         rightInput = false;
+
+        if (myrb.position.y < 0.0f)
+        {
+            if (isAlive)
+            {
+                myAnim.SetBool("isRunning", true);
+                myAnim.SetBool("isWalking", false);
+                myAnim.SetBool("isIdle", false);
+                state = 1;
+            }
+        }
+        else
+        {
+            if (isAlive)
+            {
+                myAnim.SetBool("isWalking", true);
+                myAnim.SetBool("isRunning", false);
+                myAnim.SetBool("isIdle", false);
+                state = 2;
+            }
+        }
+
+        if (!isAlive)
+        {
+            myAnim.SetBool("isWalking", false);
+            myAnim.SetBool("isRunning", false);
+            myAnim.SetBool("isDying", true);
+            myAnim.SetBool("isIdle", false);
+            state = 3;
+        }
+
+        if (mylc.GetPaused())
+        {
+            myAnim.SetBool("isWalking", false);
+            myAnim.SetBool("isRunning", false);
+            myAnim.SetBool("isDying", false);
+            myAnim.SetBool("isIdle", true);
+            state = 4;
+        }
 
         if (isAlive)
         {
@@ -146,6 +176,11 @@ public class Player : MonoBehaviour
                     isMoving = false;
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                GameObject.Find("Level Controller").GetComponent<LevelController>().TogglePause();
+            }
         }
     }
 
@@ -175,7 +210,8 @@ public class Player : MonoBehaviour
         return curDistance;
     }
 
-    public bool GetAlive() {
+    public bool GetAlive()
+    {
         return isAlive;
     }
 

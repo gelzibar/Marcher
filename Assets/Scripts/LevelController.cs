@@ -11,6 +11,8 @@ public class LevelController : MonoBehaviour {
 
 	public Player myPlayer;
 
+	bool isActive, isPaused;
+
 	void Start () {
 		OnStart();
 	}
@@ -21,6 +23,9 @@ public class LevelController : MonoBehaviour {
 		baseSpeed = 0.1f;
 		multiplierSpeed = 1.0f;
 		curSpeed = baseSpeed * multiplierSpeed;
+
+		isActive = true;
+		isPaused = false;
 	}
 	
 	void FixedUpdate() {
@@ -34,13 +39,31 @@ public class LevelController : MonoBehaviour {
 	}
 
 	void OnUpdate() {
+		isActive = myPlayer.GetAlive();
+
+		if(isActive && !isPaused) {
 		playerDistance = myPlayer.GetDistance();
 		multiplierSpeed = (playerDistance / 100.0f);
 		curSpeed = baseSpeed * multiplierSpeed;
+		} else {
+			curSpeed = 0.0f;
+		}
 	}
 
 	public float GetSpeed() {
 		return curSpeed;
+	}
+
+	public bool GetActive() {
+		return isActive;
+	}
+
+	public bool GetPaused() {
+		return isPaused;
+	}
+
+	public void TogglePause() {
+		isPaused = !isPaused;
 	}
 
 }

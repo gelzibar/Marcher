@@ -8,9 +8,9 @@ public class UIController : MonoBehaviour
 {
 
     public GameObject distance, distance2;
-	public GameObject deathUI;
+	public GameObject deathUI, pauseUI;
     public GameObject player;
-    public Player playerScript;
+    private Player playerScript;
     private Text distanceText, distanceText2;
 
     void Start()
@@ -41,11 +41,18 @@ public class UIController : MonoBehaviour
         distanceText.text = playerScript.GetDistance().ToString() + "m";
         distanceText2.text = playerScript.GetDistance().ToString() + "m";
 
+        LevelController lc = GameObject.Find("Level Controller").GetComponent<LevelController>();
+        
 		if(!playerScript.GetAlive()) {
 			deathUI.SetActive(true);
+            pauseUI.SetActive(true);
+        }else if(lc.GetPaused()) {
+            pauseUI.SetActive(true);
 		}else {
 			deathUI.SetActive(false);
+            pauseUI.SetActive(false);
 		}
+
     }
 
     public void Button_ExitApp()

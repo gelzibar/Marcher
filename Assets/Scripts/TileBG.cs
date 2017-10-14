@@ -49,6 +49,7 @@ public class TileBG : MonoBehaviour
     }
     void OnUpdate()
     {
+
         curSpeed = myLevel.GetSpeed();
 
     }

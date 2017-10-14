@@ -29,7 +29,7 @@ public class LaneSource : MonoBehaviour
         {
             obstaclePercent = 18;
         }
-        hazardOffset = 15;
+        hazardOffset = CalculateScreenHeight();
 
         PopulatePlaySpace();
         GenerateBG();
@@ -80,6 +80,7 @@ public class LaneSource : MonoBehaviour
             {
                 if (i == numRows)
                 {
+                    Vector3 pos = new Vector3(location.x, transform.position.y - hazardOffset, location.z);
                     GenerateHazard(location);
                 }
             }
@@ -119,7 +120,6 @@ public class LaneSource : MonoBehaviour
 
     void GenerateBG()
     {
-        Debug.Log("BG Executing");
         Vector3 location = new Vector3();
         if (curTile != null)
         {
@@ -154,5 +154,13 @@ public class LaneSource : MonoBehaviour
     void GenerateHazard(Vector3 location)
     {
         Instantiate(pHazard, location, transform.rotation, GameObject.Find("Hazards").transform);
+    }
+
+    int CalculateScreenHeight() {
+        int height = Screen.height;
+        int tileSize = 64;
+
+        return height / tileSize;
+
     }
 }
