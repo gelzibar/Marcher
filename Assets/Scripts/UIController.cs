@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using PortlySage;
 
 public class UIController : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class UIController : MonoBehaviour
 		if(!playerScript.GetAlive()) {
 			deathUI.SetActive(true);
             pauseUI.SetActive(true);
-        }else if(lc.GetPaused()) {
+        }else if(lc.GetCurState() == States.Paused) {
             pauseUI.SetActive(true);
 		}else {
 			deathUI.SetActive(false);

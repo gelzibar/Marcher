@@ -1,69 +1,85 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PortlySage;
 
-public class LevelController : MonoBehaviour {
+public class LevelController : MonoBehaviour
+{
 
-	float playerDistance;
-	float baseSpeed;
-	float multiplierSpeed;
-	float curSpeed;
+    float playerDistance;
+    public float baseSpeed;
+    public float multiplierSpeed;
+    public float curSpeed;
 
-	public Player myPlayer;
+    public Player myPlayer;
+    public AudioSource myAudioTracks;
+    public AudioClip gameoverTrack, themeTrack;
 
-	bool isActive, isPaused;
+    States curState;
 
-	void Start () {
-		OnStart();
-	}
+    void Start()
+    {
+        OnStart();
+    }
 
-	void OnStart() {
+    void OnStart()
+    {
+        curState = States.Init;
+        playerDistance = myPlayer.GetDistance();
+        baseSpeed = 1.0f;
+        multiplierSpeed = 1.0f;
+        curSpeed = baseSpeed * multiplierSpeed;
+    }
 
-		playerDistance = myPlayer.GetDistance();
-		baseSpeed = 0.1f;
-		multiplierSpeed = 1.0f;
-		curSpeed = baseSpeed * multiplierSpeed;
+    void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
 
-		isActive = true;
-		isPaused = false;
-	}
-	
-	void FixedUpdate() {
-		OnFixedUpdate();
-	}
+    void OnFixedUpdate() { }
 
-	void OnFixedUpdate() {}
+    void Update()
+    {
+        OnUpdate();
+    }
 
-	void Update () {
-		OnUpdate();
-	}
+    void OnUpdate()
+    {
+        if (curState == States.Playable)
+        {
+            if (!myAudioTracks.isPlaying)
+            {
+                myAudioTracks.clip = themeTrack;
+                myAudioTracks.Play();
+            }
+            playerDistance = myPlayer.GetDistance();
+            multiplierSpeed = 1.0f + (playerDistance / 50.0f);
+            multiplierSpeed = Mathf.Clamp(multiplierSpeed, 1.0f, 6.0f);
+            curSpeed = baseSpeed * multiplierSpeed;
+        }
+        else if (curState == States.GameOver)
+        {
+            if (myAudioTracks.clip == themeTrack)
+            {
+                myAudioTracks.clip = gameoverTrack;
+                myAudioTracks.Play(22050);
+            }
+        }
+    }
 
-	void OnUpdate() {
-		isActive = myPlayer.GetAlive();
+    public float GetSpeed()
+    {
+        return curSpeed;
+    }
 
-		if(isActive && !isPaused) {
-		playerDistance = myPlayer.GetDistance();
-		multiplierSpeed = (playerDistance / 100.0f);
-		curSpeed = baseSpeed * multiplierSpeed;
-		} else {
-			curSpeed = 0.0f;
-		}
-	}
+    public States GetCurState()
+    {
+        return curState;
+    }
 
-	public float GetSpeed() {
-		return curSpeed;
-	}
-
-	public bool GetActive() {
-		return isActive;
-	}
-
-	public bool GetPaused() {
-		return isPaused;
-	}
-
-	public void TogglePause() {
-		isPaused = !isPaused;
-	}
+    public void SetCurState(States state)
+    {
+        curState = state;
+    }
 
 }

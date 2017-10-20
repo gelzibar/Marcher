@@ -6,6 +6,12 @@ public class LaneSource : MonoBehaviour
 {
 
     public GameObject pTile, pObstacle, pHazard;
+    public GameObject myPlayer;
+    private Player playerScript;
+    private Vector2 playerPos, offsetPos;
+    private float offset;
+
+    private Rigidbody2D rb;
     public bool obstacleOnly;
     private GameObject curTile;
     private int obstaclePercent;
@@ -19,6 +25,13 @@ public class LaneSource : MonoBehaviour
 
     void OnStart()
     {
+        rb = GetComponent<Rigidbody2D>();
+        playerScript = myPlayer.GetComponent<Player>();
+        offset = 10.0f;
+        playerPos = playerScript.GetPosition();
+        offsetPos = new Vector2(rb.position.x, playerPos.y + offset);
+        
+
         curDistance = 0;
         if (obstacleOnly)
         {
@@ -41,7 +54,10 @@ public class LaneSource : MonoBehaviour
         OnFixedUpdate();
     }
 
-    void OnFixedUpdate() { }
+    void OnFixedUpdate() {
+        rb.MovePosition(offsetPos);
+
+    }
 
     void Update()
     {
@@ -51,7 +67,7 @@ public class LaneSource : MonoBehaviour
     {
         if (curTile != null)
         {
-            if (Vector3.Distance(transform.position, curTile.GetComponent<Rigidbody2D>().position) > 1.0f)
+            if (Vector3.Distance(transform.position, curTile.transform.position) > 1.0f)
             {
                 if (Random.Range(0, 20) >= obstaclePercent)
                 {
@@ -60,6 +76,9 @@ public class LaneSource : MonoBehaviour
                 GenerateBG();
             }
         }
+
+        playerPos = playerScript.GetPosition();
+        offsetPos = new Vector2(rb.position.x, playerPos.y + offset);
 
 
     }
@@ -80,8 +99,8 @@ public class LaneSource : MonoBehaviour
             {
                 if (i == numRows)
                 {
-                    Vector3 pos = new Vector3(location.x, transform.position.y - hazardOffset, location.z);
-                    GenerateHazard(location);
+                    Vector3 pos = new Vector3(location.x, transform.position.y - (i+1), location.z);
+                    GenerateHazard(pos);
                 }
             }
         }

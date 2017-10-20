@@ -7,10 +7,8 @@ public class TileBG : MonoBehaviour
 
     TileManager myTileManager;
     SpriteRenderer mySR;
-    Rigidbody2D myRB;
     LevelController myLevel;
     public float meters;
-    float curSpeed;
 
     void Start()
     {
@@ -23,11 +21,7 @@ public class TileBG : MonoBehaviour
         mySR = GetComponent<SpriteRenderer>();
         mySR.sprite = myTileManager.RandomBackground();
 
-        myRB = GetComponent<Rigidbody2D>();
-
         myLevel = GameObject.Find("Level Controller").GetComponent<LevelController>();
-
-        curSpeed = myLevel.GetSpeed();
 
     }
 
@@ -38,8 +32,6 @@ public class TileBG : MonoBehaviour
 
     void OnFixedUpdate()
     {
-        Vector2 movement = new Vector2(myRB.position.x, myRB.position.y + - curSpeed);
-        myRB.MovePosition(movement);
 
     }
 
@@ -49,8 +41,6 @@ public class TileBG : MonoBehaviour
     }
     void OnUpdate()
     {
-
-        curSpeed = myLevel.GetSpeed();
 
     }
 

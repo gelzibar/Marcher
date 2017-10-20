@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PortlySage;
 
 public class Prompt : MonoBehaviour
 {
-
+    private LevelController lc;
     string[] text;
     float timeMax, timeDelta;
     int indexCur;
@@ -20,6 +21,7 @@ public class Prompt : MonoBehaviour
 
     void OnStart()
     {
+        lc = GameObject.Find("Level Controller").GetComponent<LevelController>();
         indexCur = 0;
         text = new string[indexMax] { "Get Ready...", "3...", "2...", "1...", "Go!" };
         timeMax = 1.0f;
@@ -60,6 +62,7 @@ public class Prompt : MonoBehaviour
         }
         else
         {
+            lc.SetCurState(States.Playable);
             gameObject.SetActive(false);
         }
 

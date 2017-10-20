@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4987936291619784}
   - component: {fileID: 212539392934694532}
+  - component: {fileID: 50110526149935116}
   - component: {fileID: 114667950633052554}
   m_Layer: 0
   m_Name: Lane Source
@@ -34,13 +35,33 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1849203252274598}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1, y: 7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50110526149935116
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849203252274598}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &114667950633052554
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -55,6 +76,7 @@ MonoBehaviour:
   pTile: {fileID: 1304872093969584, guid: c10a16c2dda2f44ad8cc6a38ff098c1b, type: 2}
   pObstacle: {fileID: 1600927247336320, guid: 2a5b2a864565e47f78d8ff38ef4b0624, type: 2}
   pHazard: {fileID: 1527752067580198, guid: 69899e18b3b8b4a9da66234ab84452a6, type: 2}
+  myPlayer: {fileID: 0}
   obstacleOnly: 0
 --- !u!212 &212539392934694532
 SpriteRenderer:
